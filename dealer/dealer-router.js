@@ -21,6 +21,18 @@ router.post('/', (req, res) => {
     .catch(err => res.status(500).json({ error: 'Failed to add vehicle information - VIN should be unique' }));
 });
 
+router.put('/:id', (req, res) => {
+  const changes = req.body;
+
+  knex('cars')
+    .where({ id: req.params.id })
+    .update(changes)
+    .then(count => {
+      res.status(200).json(count)
+    })
+    .catch(err => res.status(500).json({ error: 'Failed to update vehicle' }));
+});
+
 router.delete('/:id', (req, res) => {
   knex('cars')
     .where({ id: req.params.id })
@@ -28,7 +40,7 @@ router.delete('/:id', (req, res) => {
     .then(count => {
       res.status(200).json(count)
     })
-    .catch(err => res.status(500).json)({ error: 'Failed to delete vehicle'});
+    .catch(err => res.status(500).json({ error: 'Failed to delete vehicle' }));
 });
 
 module.exports = router;
