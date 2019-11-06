@@ -10,5 +10,25 @@ router.get('/', (req, res) => {
     .then(cars => {
       res.status(200).json(cars)
     })
-    .catch(err => res.status(500).json({ error: 'Failed to retrieve cars' }));
+    .catch(err => res.status(500).json({ error: 'Failed to retrieve vehicles' }));
 });
+
+router.post('/', (req, res) => {
+  knex
+    .insert(req.body, 'id')
+    .into('cars')
+    .then(id => res.status(200).json(id))
+    .catch(err => res.status(500).json({ error: 'Failed to add vehicle information - VIN should be unique' }));
+});
+
+router.delete('/:id', (req, res) => {
+  knex('cars')
+    .where({ id: req.params.id })
+    .del()
+    .then(count => {
+      res.status(200).json(count)
+    })
+    .catch(err => res.status(500).json)({ error: 'Failed to delete vehicle'});
+});
+
+module.exports = router;
